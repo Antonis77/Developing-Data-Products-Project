@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Developing Data Products Project</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Developing Data Products Project">
+  <meta name="author" content="Antonios Papoutsakis">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Developing Data Products Project</h1>
+    <h2>Vehicle Fuel Consumption Calculation</h2>
+    <p>Antonios Papoutsakis<br/>Wind Energy Engineer</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Overview</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>A Shiny application is developed to calculate fuel consumption of vehicles. For this purpose mtcars dataset is used with data extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973-74 models). The scope of this work is to create regression models for fuel consumption of automatic and manual transmission and develop a shiny application through which relevant calculations can be done. </p>
+
+<p>Here is a sample of the first four vehicles.</p>
+
+<pre><code class="r">head(mtcars,4)
+</code></pre>
+
+<pre><code>##                 mpg cyl disp  hp drat    wt  qsec vs        am gear carb
+## Mazda RX4      21.0   6  160 110 3.90 2.620 16.46  0    Manual    4    4
+## Mazda RX4 Wag  21.0   6  160 110 3.90 2.875 17.02  0    Manual    4    4
+## Datsun 710     22.8   4  108  93 3.85 2.320 18.61  1    Manual    4    1
+## Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1 Automatic    3    1
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Variable Selection</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>All variables are originally numeric. We will transfrom to factor the transmission &quot;am&quot;, the nuumber of cylinders &quot;cyl&quot;, the number of carburetors  &quot;carb&quot; and the number of forward gear &quot;gear&quot;. Then We will apply a stepwise algorithm to check all possible models and select the best according to AIC (Akaike information criterion). </p>
+
+<pre><code class="r">fit1&lt;-lm(mpg~.,mtcars);fit2&lt;-step(fit1)
+</code></pre>
+
+<pre><code class="r">fit2$call
+</code></pre>
+
+<pre><code>## lm(formula = mpg ~ cyl + hp + wt + am, data = mtcars)
+</code></pre>
+
+<p>According to the result the model that best describes fuel consumption has four variables. Number of cylinders (factor), horse power (number), weight (number) and gear type (factor).</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Model Creation</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The two models are developed seperatelly be dividing our dataset into manual and automatic transmission. Then by using predict function from caret package we can calculate projected fuel consumtion values. </p>
+
+<pre><code class="r">round(autoFit$coef,1)
+</code></pre>
+
+<pre><code>## (Intercept)        cyl6        cyl8          hp          wt 
+##        30.4        -2.1        -2.7         0.0        -1.8
+</code></pre>
+
+<pre><code class="r">round(manualFit$coef,1)
+</code></pre>
+
+<pre><code>## (Intercept)        cyl6        cyl8          hp          wt 
+##        43.7        -1.5         2.0         0.0        -6.5
+</code></pre>
+
+<p>As expected increase of weight is a major factor increasing fuel consumption while number of cylinders and horsepower have less impact. </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Shiny Appication</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>In the developed shiny application the user can insert the 3 independent variables and receive the results of fuel consuption for Automatic and Manual transmission car, an example screenshot is shown below:</p>
+
+<p><iframe src = 'https://antonis77.shinyapps.io/Motor-Trend-Shiny-Prediction/'></iframe></p>
+
+<p>--- .class #id </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Overview'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Variable Selection'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Model Creation'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Shiny Appication'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
